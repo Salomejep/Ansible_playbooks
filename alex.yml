@@ -1,0 +1,45 @@
+---
+
+- name: Deploy Alex smith web site
+  hosts: all
+  become: yes
+  tasks: 
+  - name: Download the folder
+    get_url:
+     url: https://github.com/utrains/static-resume/archive/refs/heads/main.zip
+     dest: /tmp/main.zip
+
+  - name: unzip alex file
+    unarchive:
+     src: /tmp/main.zip
+     dest: /tmp
+     remote_src: yes
+    when: ansible_os_family=="RedHat"
+
+  - name: Delete zip file
+    file:
+      path: /tmp/main.zip
+      state: absent
+    when: ansible_os_family=="RedHat"  
+
+  - name: install httpd
+    package:
+     name: httpd
+     state: present
+    when: ansible_os_family=="RedHat" 
+
+  - name: copy from current repository to the webserver  
+    copy: 
+     src: /tmp/static-resume-main/
+     dest: /var/www/html/
+     remote_src: yes
+    when: ansible_os_family=="RedHat" 
+
+  - name: start apache server 
+    service:
+      name: httpd
+      state: started
+      enabled: yes  
+    when: ansible_os_family=="RedHat"  
+       
+   

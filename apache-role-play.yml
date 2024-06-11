@@ -1,0 +1,21 @@
+---
+- hosts: ws
+  ignore_errors: True
+  become: true
+  tasks:
+  - name: Create a user
+    user: 
+     name: myuser
+     comment: sasa sasa
+  - name: Create a file on target host
+    file: 
+     path: /tmp/ansiblefile
+     state: touch
+  - name: Create a directory
+    file:
+     path: /opt/directory_ansible
+     state: directory
+  - name: 
+    package:
+     name: "{{ 'httpd' if ansible_distribution == 'Amazon' else 'apache2 '}}"
+     state: present    
