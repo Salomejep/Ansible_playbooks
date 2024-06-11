@@ -2,8 +2,8 @@ pipeline{
     agent{
         label "ansible-agent"
     }
-    stages("run ping module"){
-        stage{
+    stages{
+        stage('run ping command'){
             steps{
                 sh 'ansible -m ping'
             }
